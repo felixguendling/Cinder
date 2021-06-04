@@ -143,6 +143,12 @@ function( ci_make_app )
 		set_target_properties( ${ARG_APP_NAME} PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:LIBCMT /NODEFAULTLIB:LIBCPMT" )
 	endif()
 
+	if ( CINDER_EMSCRIPTEN )
+		set_target_properties( ${ARG_APP_NAME} PROPERTIES SUFFIX ".html" )
+		target_link_options( ${ARG_APP_NAME} PRIVATE --bind )
+		target_link_options( ${ARG_APP_NAME} PRIVATE -sERROR_ON_UNDEFINED_SYMBOLS=0 -sUSE_WEBGL2=1 -sFULL_ES3=1 -sUSE_GLFW=3 -sDISABLE_EXCEPTION_CATCHING=0 -sDEMANGLE_SUPPORT=1 )
+	endif()
+
 	# Blocks are first searched relative to the sample's CMakeLists.txt file, then within cinder's blocks folder
 	foreach( block ${ARG_BLOCKS} )
 		get_filename_component( blockModuleDir "${CMAKE_CURRENT_SOURCE_DIR}/${block}/proj/cmake" ABSOLUTE )
